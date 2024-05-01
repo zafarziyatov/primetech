@@ -12,6 +12,9 @@ public class ResponseDto<T> {
     private String message ;
     private T data ;
 
+
+
+
     public ResponseDto(Boolean success, String message) {
         this.success = success;
         this.message = message;
