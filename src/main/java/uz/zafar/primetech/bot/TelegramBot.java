@@ -55,8 +55,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     private String botUsername;
     @Value("${bot.token}")
     private String botToken;
-    @Value("${server.path.url}")
-    private String serverPath;
     @Autowired
     private UserService userService;
     @Autowired
@@ -96,7 +94,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
-        Long chatId=0L;
+        Long chatId = 0L;
         int messageId;
         User user;
         String nickname = "", username = "";
@@ -111,10 +109,10 @@ public class TelegramBot extends TelegramLongPollingBot {
                 chatId = update.getCallbackQuery().getMessage().getChatId();
             }
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             log.error(e);
         }
-        if (chatId<=1L)return;
+        if (chatId <= 1L) return;
         ResponseDto<User> checkUser = userService.findByChatId(chatId);
         if (checkUser.isSuccess()) {
             user = checkUser.getData();
@@ -141,20 +139,24 @@ public class TelegramBot extends TelegramLongPollingBot {
 
 
         String role = user.getRole();
-       try {
-           if (update.hasMessage()) {
-               if (!user.getNickname().equals(nickname)) {
-                   user.setNickname(nickname);
-                   userService.save(user);
-               }
-               if (!user.getUsername().equals(username)) {
-                   user.setUsername(username);
-                   userService.save(user);
-               }
-           }
-       } catch (Exception e) {
-           log.error(e);
-       }
+        File file = new File("src/main/java/uz/zafar/primetech/server");
+
+        String url = file.getAbsolutePath();
+
+        try {
+            if (update.hasMessage()) {
+                if (!user.getNickname().equals(nickname)) {
+                    user.setNickname(nickname);
+                    userService.save(user);
+                }
+                if (!user.getUsername().equals(username)) {
+                    user.setUsername(username);
+                    userService.save(user);
+                }
+            }
+        } catch (Exception e) {
+            log.error(e);
+        }
         if (chatId.equals(superAdminChatId)) {
             SuperAdmin superAdmin = new SuperAdmin(
                     this, userService, superAdminKyb, superAdminMsg
@@ -165,7 +167,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     this, userService, categoryService,
                     productService, adminKyb, adminMsg, branchRepository, aboutMeRepository
             );
-            adminRole.menu(user, update, serverPath, getBotToken());
+            adminRole.menu(user, update, url, getBotToken());
         } else if (role.equals("user")) {
             UserRole userRole = new UserRole(
                     this, kyb, msg,
@@ -175,7 +177,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     basketService, branchRepository,
                     pickupKyb, pickupMsg, aboutMeRepository
             );
-            userRole.menu(user, update, serverPath,superAdminChatId);
+            userRole.menu(user, update, url, superAdminChatId);
         } else {
             sendMessage(chatId, "error");
         }

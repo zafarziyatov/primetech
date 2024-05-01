@@ -1,0 +1,26 @@
+version: '3'
+services:
+  db:
+    container_name: PrimeTech-bot-app-db
+    image: postgres:15
+    ports:
+      - "5433:5432"
+    restart: always
+    volumes:
+      - /var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: primetech1
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: zafar123
+  web:
+    container_name: PrimeTech-bot-app
+    build: .
+    restart: always
+    ports:
+      - "8090:8090"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/ primetech1
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: zafar123

@@ -164,7 +164,7 @@ public class UserRole {
                             userService.save(user);
                             EditMessageMedia editMessageMedia = new EditMessageMedia();
                             editMessageMedia.setMedia(new InputMediaVideo("https://t.me/Tik_Tok_Prikollar_Hazillar/" + count));
-                            editMessageMedia.setMessageId(update.getCallbackQuery().getMessage().getMessageId()) ;
+                            editMessageMedia.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
                             editMessageMedia.setChatId(user.getChatId());
                             List<CallbackData> callbackData = new ArrayList<>();
                             callbackData.add(new CallbackData("⬅\uFE0F Back", "back"));
@@ -279,7 +279,7 @@ public class UserRole {
                 try {
                     user = userService.findByChatId(user.getChatId()).getData();
                     long n = user.getCount();
-                    if (n<1353)n=1353L;
+                    if (n < 1353) n = 1353L;
                     user.setCount(n + 1);
                     userService.save(user);
                     List<CallbackData> data = new ArrayList<>();
